@@ -1,75 +1,18 @@
 use parking_lot::Mutex;
 use std::{error::Error, sync::Arc};
 
+mod employee;
+use employee::{borrow_thing, Employee};
+
+mod ided;
+
+mod lib;
+use lib::*;
+
 // #[test]
 // fn my_test() {
 //     assert!(true)
 // }
-
-// how to make a function
-fn greet_int(x: i64) {
-    println!("Hello to number {}.", x);
-}
-
-// how to make a string function
-fn greet_str(x: &str) {
-    println!("Hello to {}.", x);
-}
-
-// how to return something
-fn return_str(x: &str) -> String {
-    format!("Get back {}.", x)
-}
-
-// using struct
-#[derive(Debug)]
-struct Employee {
-    name: String,
-    id: i64,
-}
-
-impl Employee {
-    fn new(name: String, id: i64) -> Employee {
-        Employee { name, id }
-    }
-
-    fn id(&self) -> i64 {
-        self.id
-    }
-
-    // "&" means "to borrow" or reference, not own.
-    // "String"s require extra steps to be able to pass it value.
-    // Unlike i64s
-    // so use clone()
-    fn name(&self) -> String {
-        self.name.clone()
-    }
-
-    // this is same as above
-    // only here rather that two pointer pointing at separate items
-    // here two pointers point to same thing
-    // fn clone() is better for beginners.
-    // 'a means "a type of lifetime"
-    // could be 'a 'b 'c 'd 'T
-    fn name_lifetime<'a>(&'a self) -> &'a str {
-        &self.name
-    }
-}
-
-fn borrow_thing(employee: &Employee) {
-    println!("I have borrowed this {}.", employee.name);
-}
-
-// using enum
-#[derive(Debug)]
-enum IsTrue {
-    True(i64),
-    False,
-}
-
-fn process() -> Result<String, Box<dyn Error>> {
-    Ok(String::from("Yay!"))
-}
 
 fn main() -> Result<(), Box<dyn Error>> {
     // join a string
@@ -144,6 +87,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     // thread safe version of shared employee
     // put lock on . needs to be unlocked
     let reference_counted = Arc::new(employee_arc_lock);
+
+    // ///////////////////////////////
+
+    let mut employee_mutable = Employee::new(String::from("Arthur_emutable"), 500);
 
     // here the "?" this is like try catch.
     let result = process();
